@@ -1,0 +1,11 @@
+
+# 运行
+
+需要使用Web服务器运行
+
+## python
+
+- 命令行 cd 切换到当前目录下
+- 执行命令 python3 -m http.server
+- 打开浏览器 http://localhost:8000/
+

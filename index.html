@@ -1,0 +1,535 @@
+<!-- Code from d3-graph-gallery.com -->
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<style>
+
+  body {
+    background-color: white;
+    padding: 0;
+    margin: 0;
+  }
+  svg {
+    border: 0px solid black;
+    background-color: white;
+  }
+
+  .selected {
+    /* fill: red; */
+    stroke: rgb(235, 15, 15);
+    stroke-width: 2px; 
+  }
+
+  .boundary {
+    fill: #ffffff;
+    stroke: rgb(128, 128, 128);
+    stroke-width: 1px; 
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  div.tooltip {
+    color: #222; 
+    background: #fff; 
+    border-radius: 3px; 
+    box-shadow: 0px 0px 2px 0px #a6a6a6; 
+    padding: .2em; 
+    text-shadow: #f5f5f5 0 1px 0;
+    opacity: 0.9; 
+    position: absolute;
+  }
+
+  text.label{
+    position: relative;
+  }
+
+</style>
+
+<!-- Load d3.js -->
+<!-- <script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>-->
+<!-- <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>  -->
+<script src="d3.v4.min.js"></script>
+<script src="d3-scale-chromatic.v1.min.js"></script>
+<script src="d3-geo-projection.v2.min.js"></script>
+<script src="d3-legend.min.js"></script>
+
+<script type="text/javascript" src="js/dat.gui.min.js"></script>
+<div id="map"></div>
+<!-- Create an element where the map will take place -->
+<svg id="vis"></svg>
+
+<svg height="10" width="10" xmlns="http://www.w3.org/2000/svg" version="1.1"> <defs> <pattern id="diagonal-stripe-1" patternUnits="userSpaceOnUse" width="10" height="10"> <image xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMCcgaGVpZ2h0PScxMCc+CiAgPHJlY3Qgd2lkdGg9JzEwJyBoZWlnaHQ9JzEwJyBmaWxsPSd3aGl0ZScvPgogIDxwYXRoIGQ9J00tMSwxIGwyLC0yCiAgICAgICAgICAgTTAsMTAgbDEwLC0xMAogICAgICAgICAgIE05LDExIGwyLC0yJyBzdHJva2U9J2JsYWNrJyBzdHJva2Utd2lkdGg9JzEnLz4KPC9zdmc+Cg==" x="0" y="0" width="10" height="10"> </image> </pattern> </defs> </svg>
+<svg height="8" width="8" xmlns="http://www.w3.org/2000/svg" version="1.1"> <defs> <pattern id="crosshatch" patternUnits="userSpaceOnUse" width="8" height="8"> <image xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc4JyBoZWlnaHQ9JzgnPgogIDxyZWN0IHdpZHRoPSc4JyBoZWlnaHQ9JzgnIGZpbGw9JyNmZmYnLz4KICA8cGF0aCBkPSdNMCAwTDggOFpNOCAwTDAgOFonIHN0cm9rZS13aWR0aD0nMC41JyBzdHJva2U9JyNhYWEnLz4KPC9zdmc+Cg==" x="0" y="0" width="8" height="8"> </image> </pattern> </defs> </svg>
+<script>
+
+var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+const years = [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,'Ten-Year Average'];
+const vars = [
+  'income_group',
+  'Older_extreme_heat',
+  'Older_extreme_cold',
+  'Children_extreme_heat',
+  'Children_extreme_cold',
+  'Mortality_hightmp',
+  'Mortality_lowtmp',
+  'YLL_hightmp',
+  'YLL_lowtmp',
+]
+const colors = ['Blues','Greens','Greys','Oranges','Purples','Reds','BrBG','PRGn','PiYG','PuOr','RdBu','RdGy','RdYlBu','RdYlGn','Spectral']
+const d3colors = [d3.interpolateBlues,d3.interpolateGreens,d3.interpolateGreys,d3.interpolateOranges,d3.interpolatePurples,d3.interpolateReds,d3.interpolateBrBG, d3.interpolatePRGn,d3.interpolatePiYG,d3.interpolatePuOr,d3.interpolateRdBu,d3.interpolateRdGy,d3.interpolateRdYlBu,d3.interpolateRdYlGn,d3.interpolateSpectral]
+
+
+var config = {Year:years[0],varname:vars[0],color:colors[10]};
+const gui = new dat.GUI({
+  name : 'UTCI Visualization',
+  load : config
+});
+// gui.remember(config)
+
+
+// The svg
+var svg = d3.select("svg")
+svg.attr("width",width)
+svg.attr("height",height)
+  // width = +svg.attr("width"),
+  // height = +svg.attr("height");
+
+var container;
+
+// Map and projection
+var path = d3.geoPath();
+var projection = d3.geoMercator()
+  .scale(100)
+  .center([0,20])
+  .translate([width/2, height / 2]);
+
+  var initX;
+  //for tooltip 
+  var offsetL = document.getElementById('map').offsetLeft+10;
+  var offsetT = document.getElementById('map').offsetTop+10;
+  var tooltip = d3.select("#map")
+         .append("div")
+         .attr("class", "tooltip hidden");
+
+// Data and color scale
+var data = d3.map();
+var countries = d3.map();
+
+// Load external data and boot
+d3.queue()
+  //.defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
+  .defer(d3.json, "world.geojson")
+  // .defer(d3.csv, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv", function(d) { data.set(d.code, +d.pop); })
+  // .defer(d3.csv, "world_population.csv", function(d) { countries.set(d.code, d.name); })
+  .defer(d3.csv, "10y_code.csv")
+  .await(ready);
+
+function ready(error, topo, rawdata) {
+
+  topo.features = topo.features.filter(d=>!['ATA'].includes(d.id))
+
+  rawdata.filter(d=>d.year==config.Year).map(d=>{
+    data.set(d.code,+d[config.varname])
+  })
+
+  var colorScale;
+  var legendSequential;
+
+  colors.forEach((item,index)=>{
+    if(item==config.color) 
+      colorScale = d3.scaleSequential(d3colors[index]).domain(d3.extent(data.values()))
+  });
+
+  gui.add(config,'Year',years).onFinishChange(function(d){
+    update()
+  });
+  gui.add(config,'varname',vars).onFinishChange(function(d){
+    update()
+  });
+  // gui.add(config,'color',colors).onFinishChange(function(d){
+  //   update()
+  // });
+
+  // Draw the map
+  svg.append("g")
+    .attr("class", "boundary")
+    .selectAll("path")
+    .data(topo.features)
+    .enter()
+    .append("path")
+      // draw each country
+      .attr("d", d3.geoPath()
+        .projection(projection)
+      )
+      .on('click', selected)
+      .on("mousemove", showTooltip)
+      .on("mouseout",  function(d,i) {
+          tooltip.classed("hidden", true);
+        })
+
+  svg.append("g")
+      .attr("class", "legendSequential")
+      .attr("transform", `translate(20,20)`);
+  
+  legendSequential = d3.legendColor()
+    .shapeWidth(50)
+    .cells(10)
+    .orient("horizontal")
+    .scale(colorScale)
+
+  svg.select(".legendSequential")
+    .call(legendSequential);
+  
+  var update = function(){
+    data = d3.map();
+    rawdata.filter(d=>{
+      if(d.year==config.Year || (d.year=='2010'&&config.Year===years[10])){
+        return true;
+      }
+    }).map(d=>{
+      if(config.Year===years[10] && config.varname!='income_group')
+        data.set(d.code,+d['mean_'+config.varname])
+      else 
+        data.set(d.code,+d[config.varname])
+    })
+
+
+    colors.forEach((item,index)=>{
+        if(item==config.color) 
+          colorScale = d3.scaleSequential(d3colors[index]).domain(d3.extent(data.values()))
+      });
+
+    legendSequential = d3.legendColor()
+      .shapeWidth(50)
+      .cells(10)
+      .orient("horizontal")
+      .scale(colorScale)
+
+    if(config.varname==='income_group'){
+      //colorScale = d3.scaleSequential(d3.interpolateRdBu).domain([500,0])
+      colorScale = d3.scaleLinear().domain([0,1]).range([d3.schemeCategory10[0],d3.schemeCategory10[3]])
+     
+      legendSequential = d3.legendColor()
+        .shapeWidth(50)
+        .cells(2)
+        .orient("horizontal")
+        .scale(colorScale)
+        .labelFormat(d3.format('.0f'))
+        .labels(["high-income countries", "middle- and low-income countries"])
+        .labelWrap(140)
+        .shapeWidth(140)
+        // .labels(d3.legendHelpers.thresholdLabels)
+        //.title('各国每年55岁以上人口UTCI强热应力总和(十年均值)')
+        .title('Income')
+        .labelAlign('start')
+
+      w = svg.select(".boundary").node().getBBox().width
+      h = svg.select(".boundary").node().getBBox().height
+        
+      svg.select(".legendSequential").attr("transform", `translate(0,0) translate(${width/2-w/2},${height/2+h/2})`);
+    }else if(config.varname==='Older_extreme_heat'){
+      //colorScale = d3.scaleSequential(d3.interpolateRdBu).domain([500,0])
+      colorScale = d3.scaleThreshold().domain([500,450,400,350,300,250,200,150,100,50,0].reverse()).range(d3.schemeRdBu[11].slice().reverse())
+      d3.legendHelpers.thresholdLabels = function({
+          i,
+          genLength,
+          generatedLabels,
+          labelDelimiter
+        }) {
+          if (i === 0) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `<${values[1]}`
+          } else if (i === genLength - 1) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `${values[0]}`
+          }
+          return generatedLabels[i].split(`${labelDelimiter}`)[0]
+        }
+      legendSequential = d3.legendColor()
+        .shapeWidth(50)
+        .cells(11)
+        .orient("horizontal")
+        .scale(colorScale)
+        .labelFormat(d3.format('.0f'))
+        .labels(d3.legendHelpers.thresholdLabels)
+        //.title('各国每年55岁以上人口UTCI强热应力总和(十年均值)')
+        .title('Older population exposure to extreme heat')
+        .labelAlign('start')
+
+      w = svg.select(".boundary").node().getBBox().width
+      h = svg.select(".boundary").node().getBBox().height
+        
+      svg.select(".legendSequential").attr("transform", `translate(0,0) translate(${width/2-w/2},${height/2+h/2})`);
+    }else if(config.varname==='Older_extreme_cold'){
+      // colorScale = d3.scaleDiverging(d3.interpolateRdBu).domain([200,50,0]).range([1,0.4,0])
+      colorScale = d3.scaleThreshold().domain([200,150,100,50,40,30,20,10,5,0].reverse()).range(d3.schemeRdBu[10].slice().reverse())
+      d3.legendHelpers.thresholdLabels = function({
+          i,
+          genLength,
+          generatedLabels,
+          labelDelimiter
+        }) {
+          if (i === 0) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `<${values[1]}`
+          } else if (i === genLength - 1) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `${values[0]}`
+          }
+          return generatedLabels[i].split(`${labelDelimiter}`)[0]
+        }
+      legendSequential = d3.legendColor()
+        .shapeWidth(50)
+        .cells(10)
+        .orient("horizontal")
+        .scale(colorScale)
+        // .ascending(true)
+        .labelFormat(d3.format('.0f'))
+        // .useClass(true)
+        .labelAlign('start')
+        .labels(d3.legendHelpers.thresholdLabels)
+        //.title('各国每年55岁以上人口UTCI强冷应力总和(十年均值)')
+        .title('Older population exposure to extreme cold')
+
+      w = svg.select(".boundary").node().getBBox().width
+      h = svg.select(".boundary").node().getBBox().height
+        
+      svg.select(".legendSequential").attr("transform", `translate(0,0) translate(${width/2-w/2},${height/2+h/2})`);
+    }else if(config.varname==='Children_extreme_heat'){
+      //colorScale = d3.scaleSequential(d3.interpolateRdBu).domain([500,0])
+      colorScale = d3.scaleThreshold().domain([400,350,300,250,200,150,100,50,0].reverse()).range(d3.schemeRdBu[9].slice().reverse())
+      d3.legendHelpers.thresholdLabels = function({
+          i,
+          genLength,
+          generatedLabels,
+          labelDelimiter
+        }) {
+          if (i === 0) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `<${values[1]}`
+          } else if (i === genLength - 1) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `${values[0]}`
+          }
+          return generatedLabels[i].split(`${labelDelimiter}`)[0]
+        }
+      legendSequential = d3.legendColor()
+        .shapeWidth(50)
+        .cells(9)
+        .orient("horizontal")
+        .scale(colorScale)
+        .labelFormat(d3.format('.0f'))
+        .labels(d3.legendHelpers.thresholdLabels)
+        //.title('各国每年55岁以上人口UTCI强热应力总和(十年均值)')
+        .title('Children exposure to extreme heat')
+        .labelAlign('start')
+
+      w = svg.select(".boundary").node().getBBox().width
+      h = svg.select(".boundary").node().getBBox().height
+        
+      svg.select(".legendSequential").attr("transform", `translate(0,0) translate(${width/2-w/2},${height/2+h/2})`);
+    }else if(config.varname==='Children_extreme_cold'){
+      //colorScale = d3.scaleSequential(d3.interpolateRdBu).domain([500,0])
+      colorScale = d3.scaleThreshold().domain([200,100,50,40,30,20,10,5,0].reverse()).range(d3.schemeRdBu[9].slice().reverse())
+      d3.legendHelpers.thresholdLabels = function({
+          i,
+          genLength,
+          generatedLabels,
+          labelDelimiter
+        }) {
+          if (i === 0) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `<${values[1]}`
+          } else if (i === genLength - 1) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `${values[0]}`
+          }
+          return generatedLabels[i].split(`${labelDelimiter}`)[0]
+        }
+      legendSequential = d3.legendColor()
+        .shapeWidth(50)
+        .cells(9)
+        .orient("horizontal")
+        .scale(colorScale)
+        .labelFormat(d3.format('.0f'))
+        .labels(d3.legendHelpers.thresholdLabels)
+        //.title('各国每年55岁以上人口UTCI强热应力总和(十年均值)')
+        .title('Children exposure to extreme cold')
+        .labelAlign('start')
+
+      w = svg.select(".boundary").node().getBBox().width
+      h = svg.select(".boundary").node().getBBox().height
+        
+      svg.select(".legendSequential").attr("transform", `translate(0,0) translate(${width/2-w/2},${height/2+h/2})`);
+    }else if(config.varname==='Mortality_hightmp'){
+      // colorScale = d3.scaleDiverging(d3.interpolateRdBu).domain([200,50,0]).range([1,0.4,0])
+      colorScale = d3.scaleThreshold().domain([0, 200, 400, 600, 800, 1000, 1500, 2000, 3000, 4000]).range(d3.schemeRdBu[10].slice().reverse())
+      d3.legendHelpers.thresholdLabels = function({
+          i,
+          genLength,
+          generatedLabels,
+          labelDelimiter
+        }) {
+          if (i === 0) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `<${values[1]}`
+          } else if (i === genLength - 1) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `${values[0]}`
+          }
+          return generatedLabels[i].split(`${labelDelimiter}`)[0]
+        }
+      legendSequential = d3.legendColor()
+        .shapeWidth(50)
+        .cells(10)
+        .orient("horizontal")
+        .scale(colorScale)
+        // .ascending(true)
+        .labelFormat(d3.format('.0f'))
+        // .useClass(true)
+        .labelAlign('start')
+        .labels(d3.legendHelpers.thresholdLabels)
+        //.title('各国每年年龄标准化人口所有原因热相关死亡率')
+        .title('Mortality attributable to high temperature (per 10 million population)')
+
+      w = svg.select(".boundary").node().getBBox().width
+      h = svg.select(".boundary").node().getBBox().height
+        
+      svg.select(".legendSequential").attr("transform", `translate(0,0) translate(${width/2-w/2},${height/2+h/2})`);
+    }else if(config.varname==='Mortality_lowtmp'){
+      colorScale = d3.scaleThreshold().domain([0, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 10000]).range(d3.schemeRdBu[10].slice().reverse())
+      d3.legendHelpers.thresholdLabels = function({
+          i,
+          genLength,
+          generatedLabels,
+          labelDelimiter
+        }) {
+          if (i === 0) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `<${values[1]}`
+          } else if (i === genLength - 1) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `${values[0]}`
+          }
+          return generatedLabels[i].split(`${labelDelimiter}`)[0]
+        }
+      legendSequential = d3.legendColor()
+        .shapeWidth(50)
+        .cells(10)
+        .orient("horizontal")
+        .scale(colorScale)
+        .labelFormat(d3.format('.0f'))
+        .labelAlign('start')
+        .labels(d3.legendHelpers.thresholdLabels)
+        //.title('各国每年年龄标准化人口所有原因冷相关死亡率')
+        .title('Mortality attributable to low temperature (per 10 million population)')
+
+      w = svg.select(".boundary").node().getBBox().width
+      h = svg.select(".boundary").node().getBBox().height
+        
+      svg.select(".legendSequential").attr("transform", `translate(0,0) translate(${width/2-w/2},${height/2+h/2})`);
+    }else if(config.varname==='YLL_hightmp'){
+      colorScale = d3.scaleThreshold().domain([0, 50, 100, 150, 200, 250, 300, 400, 600, 800, 1000]).range(d3.schemeRdBu[11].slice().reverse())
+      d3.legendHelpers.thresholdLabels = function({
+          i,
+          genLength,
+          generatedLabels,
+          labelDelimiter
+        }) {
+          if (i === 0) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `<${values[1]}`
+          } else if (i === genLength - 1) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `${values[0]}`
+          }
+          return generatedLabels[i].split(`${labelDelimiter}`)[0]
+        }
+      legendSequential = d3.legendColor()
+        .shapeWidth(50)
+        .cells(10)
+        .orient("horizontal")
+        .scale(colorScale)
+        .labelFormat(d3.format('.0f'))
+        .labelAlign('start')
+        .labels(d3.legendHelpers.thresholdLabels)
+        //.title('各国每年年龄标准化人口所有原因冷相关死亡率')
+        .title('YLL attributable to high temperature (per 100,000 population)')
+
+      w = svg.select(".boundary").node().getBBox().width
+      h = svg.select(".boundary").node().getBBox().height
+        
+      svg.select(".legendSequential").attr("transform", `translate(0,0) translate(${width/2-w/2},${height/2+h/2})`);
+    }else if(config.varname==='YLL_lowtmp'){
+      colorScale = d3.scaleThreshold().domain([0, 50, 100, 150, 200, 250, 300, 400, 600, 800, 1000]).range(d3.schemeRdBu[11].slice().reverse())
+      d3.legendHelpers.thresholdLabels = function({
+          i,
+          genLength,
+          generatedLabels,
+          labelDelimiter
+        }) {
+          if (i === 0) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `<${values[1]}`
+          } else if (i === genLength - 1) {
+            const values = generatedLabels[i].split(` ${labelDelimiter} `)
+            return `${values[0]}`
+          }
+          return generatedLabels[i].split(`${labelDelimiter}`)[0]
+        }
+      legendSequential = d3.legendColor()
+        .shapeWidth(50)
+        .cells(10)
+        .orient("horizontal")
+        .scale(colorScale)
+        .labelFormat(d3.format('.0f'))
+        .labelAlign('start')
+        .labels(d3.legendHelpers.thresholdLabels)
+        //.title('各国每年年龄标准化人口所有原因冷相关死亡率')
+        .title('YLL attributable to low temperature (per 100,000 population)')
+
+      w = svg.select(".boundary").node().getBBox().width
+      h = svg.select(".boundary").node().getBBox().height
+        
+      svg.select(".legendSequential").attr("transform", `translate(0,0) translate(${width/2-w/2},${height/2+h/2})`);
+    }
+
+    d3.selectAll("path").attr("fill", function (d) {
+        d.total = data.get(d.id);
+        if(d.total===undefined)  return "url(#diagonal-stripe-1)"
+        return colorScale(d.total);
+      });
+
+    svg.select(".legendSequential").call(legendSequential)
+    
+  };
+
+  function showTooltip(d) {
+    total = data.get(d.id);
+    label = d.properties.name+"<br/>"+total;
+    var mouse = d3.mouse(svg.node())
+      .map( function(d) { return parseInt(d); } );
+    tooltip.classed("hidden", false)
+      .attr("style", "left:"+(mouse[0]+offsetL)+"px;top:"+(mouse[1]+offsetT)+"px")
+      .html(label);
+  }
+
+  function selected() {
+    d3.select('.selected').classed('selected', false);
+    d3.select(this).classed('selected', true);
+  }
+
+  update();
+
+
+
+}
+
+  
+
+</script>

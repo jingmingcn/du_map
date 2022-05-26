@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<style>
+  .boundary {
+    fill: #ffffff;
+    stroke: rgb(128, 128, 128);
+    stroke-width: 1px; 
+  }
+</style>
+<svg id="vis"></svg>
+<script src="d3.v4.min.js"></script>
+<script src="d3-geo-projection.v2.min.js"></script>
+<script type="text/javascript" src="turf.min.js"></script>
+<script>
+
+var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+// The svg
+var svg = d3.select("svg")
+svg.attr("width",width)
+svg.attr("height",height)
+
+// Map and projection
+var path = d3.geoPath();
+var projection = d3.geoMercator()
+  .scale(150)
+  .center([0,20])
+  .translate([width / 2, height / 1.5]);
+
+var codes = ['AFG','DZA','AGO','ATG','ARG','ARM','AUS','AUT','AZE','BHS','BHR','BGD','BRB','BEL','BLZ','BEN','BTN','BOL','BIH','BWA','BRA','BRN','BFA','BDI','CPV','KHM','CMR','CAN','CAF','TCD','CHL','CHN','COL','COG','CRI','CIV','HRV','CUB','CYP','CZE','PRK','COD','DNK','DJI','DOM','ECU','EGY','SLV','GNQ','ERI','EST','SWZ','ETH','FJI','FIN','FRA','GAB','GMB','GEO','DEU','GHA','GRD','GTM','GIN','GNB','GUY','HTI','HND','HUN','ISL','IND','IDN','IRN','IRQ','IRL','ISR','ITA','JAM','JPN','JOR','KAZ','KEN','KIR','KWT','LAO','LVA','LBN','LSO','LBR','LBY','LTU','LUX','MDG','MWI','MYS','MDV','MLT','MRT','MUS','MEX','FSM','MNG','MNE','MAR','MOZ','MMR','NAM','NPL','NLD','NZL','NIC','NER','NGA','MKD','NOR','OMN','PAK','PAN','PNG','PRY','PER','PHL','POL','PRT','QAT','KOR','MDA','ROU','RUS','RWA','LCA','VCT','WSM','STP','SAU','SEN','SRB','SYC','SLE','SGP','SVK','SVN','SLB','ZAF','SSD','ESP','LKA','SDN','SUR','SWE','CHE','SYR','TJK','THA','TLS','TGO','TON','TTO','TUN','TUR','UGA','ARE','TZA','USA','URY','VUT','VEN','VNM','YEM','ZMB','ZWE']
+
+var ready = function(error,topo){
+
+  features_offset = [];
+
+  topo.features.forEach(d=>{
+
+    if(!codes.includes(d.id)) return 
+    //  if (d.id !== 'CHN') return 
+
+    f = {};
+    f.type = d.type
+    f.properties = d.properties
+    f.geometry = {}
+    f.geometry.type = d.geometry.type
+    f.id = d.id+"_"
+    f.geometry.coordinates = []
+
+    var ok = true;
+   
+    if(d.geometry.type=="MultiPolygon") {
+    
+      d.geometry.coordinates.forEach(i=>{
+        try{
+          var poly = turf.polygon(i)
+          //var scaledPoly = turf.transformScale(poly, 0.8)
+          var buffered = turf.buffer(poly,-100);
+          var options = {tolerance: 0.1, highQuality: false};
+          
+          // f.geometry.coordinates.push(scaledPoly.geometry.coordinates)
+          if(buffered.geometry.coordinates) f.geometry.coordinates.push(buffered.geometry.coordinates)
+        }catch(error){
+          console.log(error)
+          
+        }
+      });
+    }else{
+      try{
+          var poly = turf.polygon(d.geometry.coordinates)
+          //var scaledPoly = turf.transformScale(poly, 0.8)
+           var buffered = turf.buffer(poly,-100);
+           var options = {tolerance: 0.0001, highQuality: false};
+          // var simplified = turf.simplify(turf.buffer(poly, 0, {units : 'kilometers'}), options)
+
+          if(buffered.geometry.coordinates) f.geometry.coordinates = buffered.geometry.coordinates
+        }catch(error){
+          console.log(error)
+          
+        }
+    }
+
+    if(ok) features_offset.push(f)
+
+  });
+
+  console.log(features_offset)
+// Draw the map
+  svg.append("g")
+    .attr("class", "boundary")
+    .selectAll("path")
+    // .data(topo.features.concat(features_offset))
+    .data(features_offset)
+    .enter()
+    .append("path")
+      // draw each country
+      .attr("d", d3.geoPath()
+        .projection(projection)
+      )
+};
+
+d3.queue().defer(d3.json, "world.geojson").await(ready);
+
+
+</script>
+</html>

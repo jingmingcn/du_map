@@ -1,0 +1,231 @@
+<!-- Code from d3-graph-gallery.com -->
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<style>
+
+  body {
+    background-color: white;
+    padding: 0;
+    margin: 0;
+  }
+  svg {
+    border: 0px solid black;
+    background-color: white;
+  }
+
+  .selected {
+    /* fill: red; */
+    stroke: rgb(235, 15, 15);
+    stroke-width: 2px; 
+  }
+
+  .boundary {
+    fill: #ffffff;
+    stroke: rgb(128, 128, 128);
+    stroke-width: 1px; 
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  div.tooltip {
+    color: #222; 
+    background: #fff; 
+    border-radius: 3px; 
+    box-shadow: 0px 0px 2px 0px #a6a6a6; 
+    padding: .2em; 
+    text-shadow: #f5f5f5 0 1px 0;
+    opacity: 0.9; 
+    position: absolute;
+  }
+
+</style>
+
+<!-- Load d3.js -->
+<!-- <script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>-->
+<!-- <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>  -->
+<script src="d3.v4.min.js"></script>
+<script src="d3-scale-chromatic.v1.min.js"></script>
+<script src="d3-geo-projection.v2.min.js"></script>
+<script src="d3-legend.min.js"></script>
+
+<script type="text/javascript" src="js/dat.gui.min.js"></script>
+<div id="map"></div>
+<!-- Create an element where the map will take place -->
+<svg id="vis"></svg>
+
+
+<script>
+
+var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+const years = [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019];
+const vars = ['income','u55_32_max_heat','u55_013_min_cold','l5_32_max_heat','l5_013_min_cold','hightmp_all','lowtmp_all','mu55_32_max_heat','mu55_013_min_cold','ml5_32_max_heat','ml5_013_min_cold','mhightmp_all','mlowtmp_all']
+const colors = ['Blues','Greens','Greys','Oranges','Purples','Reds','BrBG','PRGn','PiYG','PuOr','RdBu','RdGy','RdYlBu','RdYlGn','Spectral']
+const d3colors = [d3.interpolateBlues,d3.interpolateGreens,d3.interpolateGreys,d3.interpolateOranges,d3.interpolatePurples,d3.interpolateReds,d3.interpolateBrBG, d3.interpolatePRGn,d3.interpolatePiYG,d3.interpolatePuOr,d3.interpolateRdBu,d3.interpolateRdGy,d3.interpolateRdYlBu,d3.interpolateRdYlGn,d3.interpolateSpectral]
+
+var config = {year:years[0],varname:vars[0],color:colors[0]};
+const gui = new dat.GUI({
+  name : 'UTCI Visualization',
+  load : config
+});
+// gui.remember(config)
+
+
+// The svg
+var svg = d3.select("svg")
+svg.attr("width",width)
+svg.attr("height",height)
+  // width = +svg.attr("width"),
+  // height = +svg.attr("height");
+
+// Map and projection
+var path = d3.geoPath();
+var projection = d3.geoMercator()
+  .scale(100)
+  .center([0,20])
+  .translate([width / 2, height / 1.5]);
+
+  var initX;
+  //for tooltip 
+  var offsetL = document.getElementById('map').offsetLeft+10;
+  var offsetT = document.getElementById('map').offsetTop+10;
+  var tooltip = d3.select("#map")
+         .append("div")
+         .attr("class", "tooltip hidden");
+
+// Data and color scale
+var data = d3.map();
+var countries = d3.map();
+
+// Load external data and boot
+d3.queue()
+  //.defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
+  .defer(d3.json, "world.geojson")
+  // .defer(d3.csv, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv", function(d) { data.set(d.code, +d.pop); })
+  // .defer(d3.csv, "world_population.csv", function(d) { countries.set(d.code, d.name); })
+  .defer(d3.csv, "10y_code.csv")
+  .await(ready);
+
+function ready(error, topo, rawdata) {
+
+  rawdata.filter(d=>d.year==config.year).map(d=>{
+    data.set(d.code,d[config.varname])
+  })
+
+  var colorScale;
+  var legendSequential;
+
+  colors.forEach((item,index)=>{
+    if(item==config.color) 
+      colorScale = d3.scaleSequential(d3colors[index]).domain(d3.extent(data.values()))
+  });
+
+  gui.add(config,'year',years).onFinishChange(function(d){
+    update()
+  });
+  gui.add(config,'varname',vars).onFinishChange(function(d){
+    update()
+  });
+  gui.add(config,'color',colors).onFinishChange(function(d){
+    
+    update()
+  });
+
+  // Draw the map
+  svg.append("g")
+    .attr("class", "boundary")
+    .selectAll("path")
+    .data(topo.features)
+    .enter()
+    .append("path")
+      // draw each country
+      .attr("d", d3.geoPath()
+        .projection(projection)
+      )
+      // set the color of each country
+      .attr("fill", function (d) {
+        d.total = data.get(d.id);
+        if(d.total)
+          return colorScale(d.total);
+        else 
+          return "#fff";
+      })
+      .on('click', selected)
+      .on("mousemove", showTooltip)
+      .on("mouseout",  function(d,i) {
+          tooltip.classed("hidden", true);
+        })
+
+  svg.append("g")
+      .attr("class", "legendSequential")
+      .attr("transform", "translate(20,20)");
+  
+  legendSequential = d3.legendColor()
+    .shapeWidth(50)
+    .cells(10)
+    .orient("horizontal")
+    .scale(colorScale)
+
+  svg.select(".legendSequential")
+    .call(legendSequential);
+  
+  var update = function(){
+    data = d3.map();
+    rawdata.filter(d=>{
+      if(d.year==config.year){
+        return true;
+      }
+    }).map(d=>{
+      data.set(d.code,d[config.varname])
+    })
+
+    colors.forEach((item,index)=>{
+      if(item==config.color) 
+        colorScale = d3.scaleSequential(d3colors[index]).domain(d3.extent(data.values()))
+    });
+
+    d3.selectAll("path").attr("fill", function (d) {
+        d.total = data.get(d.id);
+        if(d.total)
+          return colorScale(d.total);
+        else 
+          return "#fff";
+      });
+
+    legendSequential = d3.legendColor()
+      .shapeWidth(50)
+      .cells(10)
+      .orient("horizontal")
+      .scale(colorScale)
+
+    svg.select(".legendSequential")
+      .call(legendSequential);
+  };
+
+  function showTooltip(d) {
+    total = data.get(d.id)||'';
+    label = d.properties.name+"<br/>"+total;
+    var mouse = d3.mouse(svg.node())
+      .map( function(d) { return parseInt(d); } );
+    tooltip.classed("hidden", false)
+      .attr("style", "left:"+(mouse[0]+offsetL)+"px;top:"+(mouse[1]+offsetT)+"px")
+      .html(label);
+  }
+
+  function selected() {
+    d3.select('.selected').classed('selected', false);
+    d3.select(this).classed('selected', true);
+  }
+
+
+
+}
+
+  
+
+</script>

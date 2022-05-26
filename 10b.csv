@@ -1,0 +1,172 @@
+worldbank_income_group_2017_2018,income,country,id,u55_32_max_heat,u55_013_min_cold,l5_32_max_heat,l5_013_min_cold,hightmp_all,lowtmp_all
+Low income,1,Afghanistan,1,0.39,-0.539,0.386,-0.521,-8.704,-77.675
+Upper middle income,1,Algeria,2,0.84,-0.109,0.762,-0.094,-15.36,-13.638
+Lower middle income,1,Angola,3,2.604,0,2.492,0,10.302,-53.929
+High income,0,Antigua and Barbuda,4,-2.363,0,-2.225,0,-19.346,-1.92
+High income,0,Argentina,5,0.573,-0.29,0.551,-0.284,-2.043,4.791
+Upper middle income,1,Armenia,6,0.908,-0.613,0.874,-0.584,0.917,-77.906
+High income,0,Australia,7,2.473,0.093,2.433,0.098,2.02,-8.827
+High income,0,Austria,8,1.013,-2.126,1.042,-2.096,0.043,-35.631
+Upper middle income,1,Azerbaijan,9,0.227,-0.778,0.335,-0.758,0.075,-41.687
+High income,0,Bahamas,10,1.22,-0.001,1.207,-0.001,-3.307,-24.152
+High income,0,Bahrain,11,0.468,0.04,0.451,0.039,-43.134,-80.322
+Lower middle income,1,Bangladesh,12,0.407,0,0.413,0,-22.895,-15.851
+High income,0,Barbados,13,-2.152,0,-2.21,0,-13.178,1.978
+High income,0,Belgium,14,0.946,-1.91,0.936,-1.831,0.095,-50.68
+Upper middle income,1,Belize,15,2.588,0,2.369,0,-3.965,-7.842
+Low income,1,Benin,16,0.272,0,0.303,0,-25.518,-2.268
+Lower middle income,1,Bhutan,17,0.396,0.032,0.357,0.065,0.038,-12.038
+Lower middle income,1,Bolivia (Plurinational State of),18,-0.164,-0.175,-0.205,-0.133,-7.509,-20.116
+Upper middle income,1,Bosnia and Herzegovina,19,0.609,-1.498,0.591,-1.464,-0.249,-39.44
+Upper middle income,1,Botswana,20,3.079,-0.238,2.399,-0.185,34.29,-62.369
+Upper middle income,1,Brazil,21,2.851,-0.004,2.307,-0.002,4.296,-25.973
+High income,0,Brunei Darussalam,22,1.403,0,1.346,0,19.759,-2.372
+Low income,1,Burkina Faso,23,0.391,0,0.31,0,-8.337,-4.93
+Low income,1,Burundi,24,0.947,0,0.76,0,-0.492,-40.907
+Lower middle income,1,Cabo Verde,25,-1.417,0,-1.344,0,0.098,46.155
+Lower middle income,1,Cambodia,26,-0.164,0,-0.096,0,7.069,-10.653
+Lower middle income,1,Cameroon,27,1.13,0,1.027,0,-12.485,-21.698
+High income,0,Canada,28,0.082,1.517,0.088,1.381,-0.024,-9.315
+Low income,1,Central African Republic,29,0.571,0,0.425,0,50.866,-23.334
+Low income,1,Chad,30,0.163,0.012,0.213,0.01,-39.429,-3.491
+High income,0,Chile,31,1.713,-0.295,1.893,-0.33,0.001,-49.166
+Upper middle income,1,China,32,1.24,-1.105,1.162,-0.898,-1.13,-137.581
+Upper middle income,1,Colombia,33,1.194,0,1.585,0,6.598,-24.829
+Lower middle income,1,Congo,34,0.88,0,0.775,0,3.719,-13.793
+Upper middle income,1,Costa Rica,35,3.009,0,2.828,0,1.302,-5.939
+Lower middle income,1,Cote d'Ivoire,36,0.361,0,0.311,0,-9.482,-5.435
+High income,0,Croatia,37,1.677,-1.538,1.641,-1.487,-0.7,-77.187
+Upper middle income,1,Cuba,38,4.202,0,4.158,0,2.759,-21.058
+High income,0,Cyprus,39,0.966,-0.043,0.857,-0.037,-1.596,-60.055
+High income,0,Czech Republic,40,0.793,-2.437,0.792,-2.434,0.282,-61.17
+Low income,1,Democratic People's Republic of Korea,41,1.061,-2.316,1.036,-2.257,2.898,-150.299
+Low income,1,Democratic Republic of the Congo,42,0.523,0,0.518,0,6.983,-37.347
+High income,0,Denmark,43,0.159,-3.28,0.175,-3.356,0.01,-66.063
+Lower middle income,1,Djibouti,44,0.633,0,0.855,0,20.181,-58.69
+Upper middle income,1,Dominican Republic,45,1.851,0,1.521,0,3.456,-1.574
+Upper middle income,1,Ecuador,46,1.208,0,1.153,0,-1.117,-23.968
+Lower middle income,1,Egypt,47,0.608,-0.001,0.615,-0.001,4.894,13.003
+Lower middle income,1,El Salvador,48,2.014,0,2.169,0,26.707,-1.968
+Upper middle income,1,Equatorial Guinea,49,2.787,0,2.405,0,1.929,-16.683
+Low income,1,Eritrea,50,0.855,0,1.312,0,14.022,-34.239
+High income,0,Estonia,51,-0.58,-1.715,-0.578,-1.697,-0.162,-43.022
+Lower middle income,1,Eswatini,52,1.793,-0.102,1.558,-0.082,1.419,-100.881
+Low income,1,Ethiopia,53,0.495,0.001,0.588,0,6.345,-39.548
+Upper middle income,1,Fiji,54,-0.203,0,-0.263,0,1.815,-16.348
+High income,0,Finland,55,-0.113,-1.489,-0.1,-1.454,0.012,-19.249
+High income,0,France,56,1.69,-1.621,1.65,-1.608,0.22,-26.366
+Upper middle income,1,Gabon,57,1.694,0,1.405,0,-1.758,-17.558
+Low income,1,Gambia,58,-0.768,0,-0.863,0,1.631,10.416
+Lower middle income,1,Georgia,59,0.785,-1.727,-1.727,-1.75,-0.12,-72.276
+High income,0,Germany,60,1.248,-2.259,1.26,-2.206,0.249,-31.139
+Lower middle income,1,Ghana,61,0.829,0,0.606,0,12.993,-6.694
+Upper middle income,1,Grenada,62,-1.986,0,-3.056,0,-17.415,2.419
+Upper middle income,1,Guatemala,63,1.475,0,1.572,0,-0.566,-16.763
+Low income,1,Guinea,64,-0.302,0,-0.245,0,8.832,-10.726
+Low income,1,Guinea-Bissau,65,-0.237,0,-0.179,0,-48.752,-12.232
+Upper middle income,1,Guyana,66,-3.404,0,-2.78,0,15.671,-9.808
+Low income,1,Haiti,67,2.813,0,2.594,0,6.409,-14.007
+Lower middle income,1,Honduras,68,1.651,0,1.321,0,2.566,-9.608
+High income,0,Hungary,69,1.238,-2.213,1.167,-2.117,-0.9,-66.647
+High income,0,Iceland,70,0,-0.576,0,-0.622,0,-35.712
+Lower middle income,1,India,71,0.377,0.001,0.221,0.002,0.016,-11.306
+Lower middle income,1,Indonesia,72,0.841,0,0.804,0,10.119,-12.398
+Upper middle income,1,Iran (Islamic Republic of),73,0.428,-0.542,0.391,-0.498,-0.219,-8.208
+Upper middle income,1,Iraq,74,-0.684,-0.153,-0.677,-0.15,-4.078,-10.919
+High income,0,Ireland,75,-0.012,0.629,-0.012,0.595,0,-40.65
+High income,0,Israel,76,2.092,0.024,2.371,0.019,0.313,-11.779
+High income,0,Italy,77,1.901,-0.537,1.84,-0.485,0.038,-28.069
+Upper middle income,1,Jamaica,78,3.094,0,2.991,0,14.351,-8.842
+High income,0,Japan,79,-0.83,-1.005,-0.772,-0.92,-0.065,-32.445
+Upper middle income,1,Jordan,80,0.647,0.03,0.586,0.027,0.746,-30.918
+Upper middle income,1,Kazakhstan,81,-0.44,0.113,-0.447,-0.342,-16.239,-28.515
+Lower middle income,1,Kenya,82,1.557,0,1.193,0,6.725,-39.902
+Lower middle income,1,Kiribati,83,17.074,0,17.079,0,35.821,-29.495
+High income,0,Kuwait,84,-0.368,-0.185,-0.378,-0.201,-8.73,-11.479
+Lower middle income,1,Lao People's Democratic Republic,85,2.184,0.002,2.051,0.001,3.548,-39.038
+High income,0,Latvia,86,-0.569,-2.261,-0.517,-2.165,-0.282,-66.364
+Upper middle income,1,Lebanon,87,1.534,-0.018,1.118,-0.013,-1.254,-49.448
+Lower middle income,1,Lesotho,88,2.306,-1.088,1.76,-0.902,0.118,-147.351
+Low income,1,Liberia,89,-0.02,0,-0.011,0,6.764,-12.175
+Upper middle income,1,Libya,90,0.084,0.155,0.09,0.164,7.392,27.461
+High income,0,Lithuania,91,-0.615,-2.646,-0.621,-2.567,-0.316,-59.181
+High income,0,Luxembourg,92,0.825,-0.249,0.793,-0.227,0.141,-71.458
+Low income,1,Madagascar,93,0.738,0,0.73,0,-7.94,-17.371
+Low income,1,Malawi,94,-0.537,0,-0.444,0,-5.628,-27.51
+Upper middle income,1,Malaysia,95,0.655,0,0.6,0,11.893,-13.555
+Upper middle income,1,Maldives,96,3.347,0,3.167,0,-6.184,-6.243
+High income,0,Malta,97,1.095,-0.081,1.089,-0.08,-0.061,-42.556
+Lower middle income,1,Mauritania,98,-0.478,-0.001,-0.467,-0.001,-63.847,16.277
+Upper middle income,1,Mauritius,99,1.89,0,1.671,0,2.578,-7.535
+Upper middle income,1,Mexico,100,1.627,-0.039,1.578,-0.04,3.342,-8.303
+Lower middle income,1,Micronesia (Federated States of),101,7.507,0,7.585,0,22.592,-20.299
+Lower middle income,1,Mongolia,102,0.318,-0.821,0.32,-0.842,-1.346,-157.301
+Upper middle income,1,Montenegro,103,0.059,-0.881,0.062,-0.844,0.029,-34.274
+Lower middle income,1,Morocco,104,0.4,-0.006,0.413,-0.005,-2.297,41.288
+Low income,1,Mozambique,105,-0.047,0,-0.446,0,-11.53,-25.53
+Lower middle income,1,Myanmar,106,-0.179,0,-0.109,0,-19.922,-20.147
+Upper middle income,1,Namibia,107,5.355,-0.237,4.665,-0.214,28.393,-67.125
+Low income,1,Nepal,108,0.073,-0.031,0.118,-0.037,-0.187,35.068
+High income,0,Netherlands,109,0.619,-1.784,0.605,-1.753,0.103,-50.443
+High income,0,New Zealand,110,0.299,-0.468,0.259,-0.4,0.002,-27.746
+Lower middle income,1,Nicaragua,111,-0.125,0,-0.18,0,4.256,-19.04
+Low income,1,Niger,112,-0.721,0.002,-0.82,0.002,-16.27,25.451
+Lower middle income,1,Nigeria,113,0.041,0,-0.019,0,-9.339,-0.876
+Upper middle income,1,North Macedonia,114,-0.511,-0.395,-0.548,-0.434,-1.678,-124.37
+High income,0,Norway,115,0.1,-2.498,0.102,-2.565,0.032,-47.338
+High income,0,Oman,116,-0.081,0.004,-0.043,0.004,-61.934,-31.019
+Lower middle income,1,Pakistan,117,-0.525,-0.037,-0.477,-0.037,5.59,-15.387
+High income,0,Panama,118,2.388,0,2.028,0,-0.292,-3.314
+Lower middle income,1,Papua New Guinea,119,-0.482,0,-0.496,0,5.496,-47.612
+Upper middle income,1,Paraguay,120,1.842,0,1.863,0,-2.236,-6.547
+Upper middle income,1,Peru,121,0.876,-0.009,0.803,-0.011,-1.604,-52.163
+Lower middle income,1,Philippines,122,0.405,0,0.364,0,11.938,-5.745
+High income,0,Poland,123,0.683,-2.623,0.662,-2.635,0.088,-69.123
+High income,0,Portugal,124,-0.095,-0.462,-0.131,-0.416,0.107,-40.171
+High income,0,Qatar,125,-0.074,0.03,-0.101,0.029,-48.277,-39.678
+High income,0,Republic of Korea,126,0.244,-2.156,0.283,-2.139,1.291,-43.137
+Lower middle income,1,Republic of Moldova,127,0.861,-1.317,0.946,-1.355,-4.489,-113.991
+Upper middle income,1,Romania,128,0.281,-2.022,0.268,-1.886,-1.633,-88.488
+Upper middle income,1,Russian Federation,129,-1.266,-0.146,-1.052,-0.131,-4.904,-96.763
+Low income,1,Rwanda,130,1.097,0,1.001,0,-0.445,-47.029
+Upper middle income,1,Saint Lucia,131,-2.815,0,-3.096,0,-6.017,3.076
+Upper middle income,1,Saint Vincent and the Grenadines,132,-2.017,0,-1.727,0,-10.2,2.612
+Upper middle income,1,Samoa,133,6.284,0,6.478,0,-0.94,-17.923
+Lower middle income,1,Sao Tome and Principe,134,3.321,0,2.615,0,-0.145,-10.566
+High income,0,Saudi Arabia,135,-0.332,0.016,-0.301,0.014,-19.079,-51.149
+Low income,1,Senegal,136,-0.716,0,-0.749,0,-17.743,0.553
+Upper middle income,1,Serbia,137,0.769,-1.458,0.552,-1.096,-0.835,-80.341
+High income,0,Seychelles,138,5.241,0,4.83,0,-3.85,-5.185
+Low income,1,Sierra Leone,139,-0.8,0,-0.446,0,7.956,-20.872
+High income,0,Singapore,140,0.397,0,0.494,0,-4.998,-1.984
+High income,0,Slovakia,141,0.905,-2.159,0.788,-2.032,-0.083,-84.602
+High income,0,Slovenia,142,1.528,-2.354,1.265,-2.184,-0.059,-47.77
+Lower middle income,1,Solomon Islands,143,-0.562,0,-0.497,0,-12.25,-19.024
+Upper middle income,1,South Africa,144,2.354,-0.405,2.241,-0.372,2.507,-121.178
+Low income,1,South Sudan,145,0.139,0,0.176,0,63.485,-15.364
+High income,0,Spain,146,0.936,-0.592,0.922,-0.554,0.248,-26.752
+Lower middle income,1,Sri Lanka,147,3.745,0,3.275,0,-2.745,-11.64
+Lower middle income,1,Sudan,148,0.079,0.005,0.083,0.005,-8.598,6.59
+Upper middle income,1,Suriname,149,-2.749,0,-2.125,0,9.11,1.557
+High income,0,Sweden,150,0.197,-3.076,0.188,-3.132,0.068,-30.996
+High income,0,Switzerland,151,1.023,-1.697,1.056,-1.733,0.051,-27.303
+Low income,1,Syrian Arab Republic,152,1.909,-0.049,1.489,-0.04,5.349,-18.157
+Low income,1,Tajikistan,153,0.824,-1.201,0.837,-1.134,5.504,-47.109
+Upper middle income,1,Thailand,154,0.86,0,0.848,0,3.459,-9.044
+Lower middle income,1,Timor-Leste,155,0.669,0,0.587,0,3,-16.237
+Low income,1,Togo,156,0.59,0,0.59,0,-1.432,-4.114
+Upper middle income,1,Tonga,157,0.574,0,0.452,0,1.379,4.361
+High income,0,Trinidad and Tobago,158,-3.788,0,-3.359,0,-26.754,-0.003
+Lower middle income,1,Tunisia,159,0.773,-0.064,0.722,-0.051,-0.308,-8.919
+Upper middle income,1,Turkey,160,0.079,-0.353,0.224,-0.393,-1.088,-65.451
+Low income,1,Uganda,161,1.531,0,1.168,0,9.581,-30.017
+High income,0,United Arab Emirates,162,0.011,0,0.007,0,-209.529,-145.522
+Low income,1,United Republic of Tanzania,163,0.425,0,0.585,0,-1.18,-21.28
+High income,0,United States of America,164,0.361,0.036,0.364,-0.029,-1.718,-14.585
+High income,0,Uruguay,165,0.394,-0.233,0.349,-0.207,-0.578,-36.358
+Lower middle income,1,Vanuatu,166,-2.382,0,-2.462,0,6.834,0.687
+Upper middle income,1,Venezuela (Bolivarian Republic of),167,0.449,0,0.448,0,5.478,-0.62
+Lower middle income,1,Vietnam,168,0.937,0,0.893,0,6.887,-36.072
+Low income,1,Yemen,169,1.098,0.002,0.933,0.002,-10.718,-21.748
+Lower middle income,1,Zambia,170,1.601,0,1.407,0,-2.189,-31.398
+Low income,1,Zimbabwe,171,1.734,0,1.396,0,-2.044,-36.235

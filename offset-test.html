@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<style>
+  .boundary {
+    fill: #ffffff;
+    stroke: rgb(128, 128, 128);
+    stroke-width: 1px; 
+  }
+</style>
+<svg id="vis"></svg>
+<script src="d3.v4.min.js"></script>
+<script src="d3-geo-projection.v2.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/paper@0.12.4/dist/paper-full.min.js"></script>
+<script type="text/javascript" src="./paperjs-offset.js"></script>
+<script>
+
+var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+// The svg
+var svg = d3.select("svg")
+svg.attr("width",width)
+svg.attr("height",height)
+
+// Map and projection
+var path = d3.geoPath();
+var projection = d3.geoMercator()
+  .scale(150)
+  .center([0,20])
+  .translate([width / 2, height / 1.5]);
+ 
+var offset = new Offset();
+// var margined = offset.data(points).margin(10);
+// var padding = offset.data(points).padding(10);
+ 
+// // decides from the sign of x: negative for padding
+// var unknown = offset.data(points).arcSegments(3).offset(x);
+ 
+// // if you want to work with the polyline - margin only
+// var polyline = offset.data(points).offsetLine(5);
+
+var codes = ['AFG','DZA','AGO','ATG','ARG','ARM','AUS','AUT','AZE','BHS','BHR','BGD','BRB','BEL','BLZ','BEN','BTN','BOL','BIH','BWA','BRA','BRN','BFA','BDI','CPV','KHM','CMR','CAN','CAF','TCD','CHL','CHN','COL','COG','CRI','CIV','HRV','CUB','CYP','CZE','PRK','COD','DNK','DJI','DOM','ECU','EGY','SLV','GNQ','ERI','EST','SWZ','ETH','FJI','FIN','FRA','GAB','GMB','GEO','DEU','GHA','GRD','GTM','GIN','GNB','GUY','HTI','HND','HUN','ISL','IND','IDN','IRN','IRQ','IRL','ISR','ITA','JAM','JPN','JOR','KAZ','KEN','KIR','KWT','LAO','LVA','LBN','LSO','LBR','LBY','LTU','LUX','MDG','MWI','MYS','MDV','MLT','MRT','MUS','MEX','FSM','MNG','MNE','MAR','MOZ','MMR','NAM','NPL','NLD','NZL','NIC','NER','NGA','MKD','NOR','OMN','PAK','PAN','PNG','PRY','PER','PHL','POL','PRT','QAT','KOR','MDA','ROU','RUS','RWA','LCA','VCT','WSM','STP','SAU','SEN','SRB','SYC','SLE','SGP','SVK','SVN','SLB','ZAF','SSD','ESP','LKA','SDN','SUR','SWE','CHE','SYR','TJK','THA','TLS','TGO','TON','TTO','TUN','TUR','UGA','ARE','TZA','USA','URY','VUT','VEN','VNM','YEM','ZMB','ZWE']
+
+var ready = function(error,topo){
+
+  features_offset = [];
+
+  console.log(topo.features.length)
+  topo.features.forEach(d=>{
+
+    if(!codes.includes(d.id)) return 
+
+    f = {};
+    f.type = d.type
+    f.properties = d.properties
+    f.geometry = {}
+    f.geometry.type = d.geometry.type
+    f.id = d.id+"_"
+    f.geometry.coordinates = []
+
+    var ok = true;
+   
+    if(d.geometry.type=="MultiPolygon") {
+    
+      d.geometry.coordinates.forEach(i=>{
+        try{
+          var padding = offset.data(i).padding(1);
+        
+          if(padding.length>0) f.geometry.coordinates.push(padding);
+        }catch(error){
+          console.log(error)
+          f.geometry.coordinates.push(i)
+        }
+      });
+    }else{
+      try{
+          var padding = offset.data(d.geometry.coordinates).padding(1);
+          if(padding.length>0) f.geometry.coordinates = padding
+        }catch(error){
+          console.log(error)
+          f.geometry.coordinates = d.geometry.coordinates
+        }
+    }
+    
+    
+    // else if(d.geometry.type=="MultiPolygon"){
+    //   d.geometry.coordinates.forEach(d=>{
+    //     k = []
+    //     d.forEach(i=>{
+    //       var padding = offset.data(i).padding(10);
+    //       k.push(padding);
+    //     });
+    //     f.geometry.coordinates.push(k);
+    //   });
+    // }
+
+    if(ok) features_offset.push(f)
+
+  });
+
+  
+
+  console.log(features_offset.length)
+
+
+// Draw the map
+  svg.append("g")
+    .attr("class", "boundary")
+    .selectAll("path")
+    // .data(topo.features)
+    .data(features_offset)
+    .enter()
+    .append("path")
+      // draw each country
+      .attr("d", d3.geoPath()
+        .projection(projection)
+      )
+};
+
+d3.queue().defer(d3.json, "world.geojson").await(ready);
+
+
+</script>
+</html>
