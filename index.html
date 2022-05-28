@@ -1,7 +1,7 @@
 <!-- Code from d3-graph-gallery.com -->
 <!DOCTYPE html>
 <meta charset="utf-8">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
 
   body {
@@ -45,6 +45,35 @@
     position: relative;
   }
 
+  .fab-container{
+    position:fixed;
+    bottom:50px;
+    right:50px;
+    cursor:pointer;
+  }
+
+  .iconbutton{
+    width:50px;
+    height:50px;
+    border-radius: 100%;
+    background: #FF4F79;
+    box-shadow: 10px 10px 5px #aaaaaa;
+  }
+  .button{
+    width:60px;
+    height:60px;
+    background:#A11692;
+  }
+
+  .iconbutton i {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height: 100%;
+    color:white;
+  }
+
+
 </style>
 
 <!-- Load d3.js -->
@@ -57,9 +86,18 @@
 <script src="d3-legend.min.js"></script>
 
 <script type="text/javascript" src="js/dat.gui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.10/umd.js" integrity="sha512-XzD6JvbRszCVIgiNU2pgCFnCtHmgu5sDydUMFNeuNkWKCccMYTJLxbe0r+PG4QNeDx7NMcrPWmztn185dHPLPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <div id="map"></div>
+<div class="fab-container">
+  <div id="downloadBtn" class="button iconbutton">
+    <i class="fa-solid fa-download"></i>
+  </div>
+</div>
 <!-- Create an element where the map will take place -->
-<svg id="vis"></svg>
+<div id="vis">
+<svg id="mainSVG"></svg>
+</div>
+<canvas id="myCanvas" style="display: none;background-color: #fff;"></canvas>
 
 <svg height="10" width="10" xmlns="http://www.w3.org/2000/svg" version="1.1"> <defs> <pattern id="diagonal-stripe-1" patternUnits="userSpaceOnUse" width="10" height="10"> <image xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMCcgaGVpZ2h0PScxMCc+CiAgPHJlY3Qgd2lkdGg9JzEwJyBoZWlnaHQ9JzEwJyBmaWxsPSd3aGl0ZScvPgogIDxwYXRoIGQ9J00tMSwxIGwyLC0yCiAgICAgICAgICAgTTAsMTAgbDEwLC0xMAogICAgICAgICAgIE05LDExIGwyLC0yJyBzdHJva2U9J2JsYWNrJyBzdHJva2Utd2lkdGg9JzEnLz4KPC9zdmc+Cg==" x="0" y="0" width="10" height="10"> </image> </pattern> </defs> </svg>
 <svg height="8" width="8" xmlns="http://www.w3.org/2000/svg" version="1.1"> <defs> <pattern id="crosshatch" patternUnits="userSpaceOnUse" width="8" height="8"> <image xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc4JyBoZWlnaHQ9JzgnPgogIDxyZWN0IHdpZHRoPSc4JyBoZWlnaHQ9JzgnIGZpbGw9JyNmZmYnLz4KICA8cGF0aCBkPSdNMCAwTDggOFpNOCAwTDAgOFonIHN0cm9rZS13aWR0aD0nMC41JyBzdHJva2U9JyNhYWEnLz4KPC9zdmc+Cg==" x="0" y="0" width="8" height="8"> </image> </pattern> </defs> </svg>
@@ -91,6 +129,29 @@ const gui = new dat.GUI({
 });
 // gui.remember(config)
 
+var download = function(href, name){
+  var link = document.createElement('a');
+  link.download = name;
+  link.style.opacity = "0";
+  // document.append(link);
+  link.href = href;
+  link.click();
+  link.remove();
+}
+
+document.getElementById('downloadBtn').addEventListener('click', function() {
+  console.log()
+  const canvas = document.querySelector('canvas');
+  const ctx = canvas.getContext('2d');
+  let v = canvg.Canvg.fromString(ctx, document.getElementById("vis").innerHTML);
+
+	// Start drawing the SVG on the canvas
+	v.start();
+  // let png = canvas.toDataURL(); // default png
+  let jpeg = canvas.toDataURL('image/jpg');
+  // let webp = canvas.toDataURL('image/webp');
+  download(jpeg, "image.jpg");
+});
 
 // The svg
 var svg = d3.select("svg")
