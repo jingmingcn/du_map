@@ -8,6 +8,9 @@
     background-color: white;
     padding: 0;
     margin: 0;
+    list-style-type: none;
+    position:absolute;
+    bottom:70px;
   }
   svg {
     border: 0px solid black;
@@ -59,6 +62,7 @@
     background: #FF4F79;
     box-shadow: 10px 10px 5px #aaaaaa;
   }
+  
   .button{
     width:60px;
     height:60px;
@@ -73,6 +77,29 @@
     color:white;
   }
 
+  .options li{
+    display:flex;
+    justify-content:flex-end;
+    padding:5px;
+  }
+
+  .options{
+    list-style-type: none;
+    position:absolute;
+    bottom:70px;
+    right:0;
+  }
+
+  .btn-label{
+    padding:2px 5px;
+    margin-right:10px;
+    align-self: center;
+    user-select:none;
+    background-color: black;
+    color:white;
+    border-radius: 3px;
+    box-shadow: 10px 10px 5px #aaaaaa;
+  }
 
 </style>
 
@@ -89,9 +116,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.10/umd.js" integrity="sha512-XzD6JvbRszCVIgiNU2pgCFnCtHmgu5sDydUMFNeuNkWKCccMYTJLxbe0r+PG4QNeDx7NMcrPWmztn185dHPLPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <div id="map"></div>
 <div class="fab-container">
+  
+  <ul class="options">
+    <li>
+    <span class="btn-label">Hide/Show&nbsp;Title</span>
+    <div id="titleBtn" class="iconbutton">
+    <i class="fa-solid fa-text-slash"></i>
+    </div>
+    </li>
+  </ul>
   <div id="downloadBtn" class="button iconbutton">
     <i class="fa-solid fa-download"></i>
   </div>
+  
 </div>
 <!-- Create an element where the map will take place -->
 <div id="vis">
@@ -140,10 +177,19 @@ var download = function(href, name){
 }
 
 document.getElementById('downloadBtn').addEventListener('click', function() {
-  console.log()
+  
   const canvas = document.querySelector('canvas');
   const ctx = canvas.getContext('2d');
-  let v = canvg.Canvg.fromString(ctx, document.getElementById("vis").innerHTML);
+
+  let svg_code = document.getElementById("vis").innerHTML;
+
+  if(d3.select("text.legendTitle").classed("hidden")){
+    svg_code = svg_code.replace(d3.select("text.legendTitle").html(),'');
+  }
+
+  console.log(svg_code)
+
+  let v = canvg.Canvg.fromString(ctx, svg_code);
 
 	// Start drawing the SVG on the canvas
 	v.start();
@@ -152,6 +198,11 @@ document.getElementById('downloadBtn').addEventListener('click', function() {
   // let webp = canvas.toDataURL('image/webp');
   download(jpeg, "image.jpg");
 });
+
+document.getElementById('titleBtn').addEventListener('click', function() {
+  d3.select("text.legendTitle").classed("hidden", !d3.select("text.legendTitle").classed("hidden"))
+});
+
 
 // The svg
 var svg = d3.select("svg")

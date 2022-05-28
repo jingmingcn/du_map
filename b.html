@@ -151,6 +151,44 @@
     color:white;
   }
 
+  .button{
+    width:60px;
+    height:60px;
+    background:#A11692;
+  }
+
+  .iconbutton i {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height: 100%;
+    color:white;
+  }
+
+  .options li{
+    display:flex;
+    justify-content:flex-end;
+    padding:5px;
+  }
+
+  .options{
+    list-style-type: none;
+    position:absolute;
+    bottom:70px;
+    right:0;
+  }
+
+  .btn-label{
+    padding:2px 5px;
+    margin-right:10px;
+    align-self: center;
+    user-select:none;
+    background-color: black;
+    color:white;
+    border-radius: 3px;
+    box-shadow: 10px 10px 5px #aaaaaa;
+  }
+
 </style>
 
 <!-- Load d3.js -->
@@ -182,6 +220,14 @@
 <!-- Create an element where the map will take place -->
 <svg id="vis" width="800" height="800"></svg>
 <div class="fab-container">
+  <ul class="options">
+    <li>
+    <span class="btn-label">Hide/Show&nbsp;Title</span>
+    <div id="titleBtn" class="iconbutton">
+    <i class="fa-solid fa-text-slash"></i>
+    </div>
+    </li>
+  </ul>
   <div id="downloadBtn" class="button iconbutton">
     <i class="fa-solid fa-download"></i>
   </div>
@@ -223,10 +269,15 @@ var download = function(href, name){
 }
 
 document.getElementById('downloadBtn').addEventListener('click', function() {
-  console.log()
   const canvas = document.querySelector('canvas');
   const ctx = canvas.getContext('2d');
-  let v = canvg.Canvg.fromString(ctx, document.getElementById("vis").outerHTML);
+  let svg_code = document.getElementById("vis").outerHTML;
+
+  if(d3.select("text.legendTitle").classed("hidden")){
+    svg_code = svg_code.replace(d3.select("text.legendTitle").html(),'');
+  }
+
+  let v = canvg.Canvg.fromString(ctx, svg_code);
 
 	// Start drawing the SVG on the canvas
 	v.start();
@@ -234,6 +285,10 @@ document.getElementById('downloadBtn').addEventListener('click', function() {
   let jpeg = canvas.toDataURL('image/jpg');
   // let webp = canvas.toDataURL('image/webp');
   download(jpeg, "image.jpg");
+});
+
+document.getElementById('titleBtn').addEventListener('click', function() {
+  d3.select("text.legendTitle").classed("hidden", !d3.select("text.legendTitle").classed("hidden"))
 });
 
 // The svg
