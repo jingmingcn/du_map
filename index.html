@@ -187,8 +187,6 @@ document.getElementById('downloadBtn').addEventListener('click', function() {
     svg_code = svg_code.replace(d3.select("text.legendTitle").html(),'');
   }
 
-  console.log(svg_code)
-
   let v = canvg.Canvg.fromString(ctx, svg_code);
 
 	// Start drawing the SVG on the canvas
