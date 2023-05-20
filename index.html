@@ -159,7 +159,7 @@ const vars = [
 ]
 const colors = ['Blues','Greens','Greys','Oranges','Purples','Reds','BrBG','PRGn','PiYG','PuOr','RdBu','RdGy','RdYlBu','RdYlGn','Spectral']
 const d3colors = [d3.interpolateBlues,d3.interpolateGreens,d3.interpolateGreys,d3.interpolateOranges,d3.interpolatePurples,d3.interpolateReds,d3.interpolateBrBG, d3.interpolatePRGn,d3.interpolatePiYG,d3.interpolatePuOr,d3.interpolateRdBu,d3.interpolateRdGy,d3.interpolateRdYlBu,d3.interpolateRdYlGn,d3.interpolateSpectral]
-
+var legendTitleHidden = false
 
 var config = {Year:years[0],varname:vars[0],color:colors[10]};
 const gui = new dat.GUI({
@@ -200,7 +200,8 @@ document.getElementById('downloadBtn').addEventListener('click', function() {
 });
 
 document.getElementById('titleBtn').addEventListener('click', function() {
-  d3.select("text.legendTitle").classed("hidden", !d3.select("text.legendTitle").classed("hidden"))
+  legendTitleHidden = !d3.select("text.legendTitle").classed("hidden")
+  d3.selectAll("text.legendTitle").classed("hidden", legendTitleHidden)
 });
 
 
@@ -282,6 +283,18 @@ function ready(error, topo, rawdata) {
       .on("mousemove", showTooltip)
       .on("mouseout",  function(d,i) {
           tooltip.classed("hidden", true);
+        })
+
+   svg.selectAll(".countryid").data(topo.features)     
+        .enter()
+        .append("text").attr("class","countryid legendTitle").text(d=>data.get(d.id)===undefined?'':d.id)
+        .attr("text-anchor","middle")
+        .attr("font-family", "Arial")
+        .attr('font-size','6px')
+        .attr("transform", function(d) {
+          let coords = path.centroid(d.geometry);
+          coords = projection(coords)
+          return `translate(${coords[0]}, ${coords[1]})`
         })
 
   svg.append("g")
