@@ -184,8 +184,9 @@ document.getElementById('downloadBtn').addEventListener('click', function() {
   const ctx = canvas.getContext('2d');
 
   let svg_node = document.getElementById("vis").cloneNode(true).firstElementChild
-  let new_width = width*3
-  let new_height = height*3
+  let scale_factor = 4
+  let new_width = width*scale_factor
+  let new_height = height*scale_factor
 
   svg_node.setAttribute('width', new_width)
   svg_node.setAttribute('height', new_height)
@@ -195,8 +196,6 @@ document.getElementById('downloadBtn').addEventListener('click', function() {
 
   let o_map_cx = width/2
   let o_map_cy = height/2
-
-  let scale_factor = 3
 
   svg_node.setAttribute("transform", `translate(${(svg_cx-o_map_cx)*scale_factor},${(svg_cy-o_map_cy)*scale_factor}) scale(${scale_factor}) `)
 

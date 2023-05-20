@@ -273,11 +273,27 @@ var download = function(href, name){
 document.getElementById('downloadBtn').addEventListener('click', function() {
   const canvas = document.querySelector('canvas');
   const ctx = canvas.getContext('2d');
-  let svg_code = document.getElementById("vis").outerHTML;
+  let svg_node = document.getElementById("vis").cloneNode(true).firstElementChild
+  let scale_factor = 4
+  let new_width = width*scale_factor
+  let new_height = height*scale_factor
 
-  if(d3.select("text.legendTitle").classed("hidden")){
-    svg_code = svg_code.replace(d3.select("text.legendTitle").html(),'');
-  }
+  svg_node.setAttribute('width', new_width)
+  svg_node.setAttribute('height', new_height)
+
+  let svg_cx = new_width/2
+  let svg_cy = new_height/2
+
+  let o_map_cx = width/2
+  let o_map_cy = height/2
+
+  svg_node.setAttribute("transform", `translate(${(svg_cx-o_map_cx)*scale_factor},${(svg_cy-o_map_cy)*scale_factor}) scale(${scale_factor}) `)
+
+  // if(d3.select("text.legendTitle").classed("hidden")){
+  //   svg_code = svg_code.replace(d3.select("text.legendTitle").html(),'');
+  // }
+
+  svg_code = svg_node.outerHTML
 
   let v = canvg.Canvg.fromString(ctx, svg_code);
 
