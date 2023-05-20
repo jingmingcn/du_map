@@ -183,11 +183,16 @@ document.getElementById('downloadBtn').addEventListener('click', function() {
   const canvas = document.querySelector('canvas');
   const ctx = canvas.getContext('2d');
 
-  let svg_code = document.getElementById("vis").innerHTML;
+  let svg_node = document.getElementById("vis").cloneNode(true).firstElementChild
+  svg_node.setAttribute('width', width*2)
+  svg_node.setAttribute('height', height*2)
+  svg_node.setAttribute("transform", `translate(${width},${height}) scale(2,2)`)
 
-  if(d3.select("text.legendTitle").classed("hidden")){
-    svg_code = svg_code.replace(d3.select("text.legendTitle").html(),'');
-  }
+  // if(d3.select("text.legendTitle").classed("hidden")){
+  //   svg_code = svg_code.replace(d3.select("text.legendTitle").html(),'');
+  // }
+
+  svg_code = svg_node.outerHTML
 
   let v = canvg.Canvg.fromString(ctx, svg_code);
 
